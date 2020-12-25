@@ -3,12 +3,12 @@ import json
 import pytest
 from unittest.mock import patch
 
-from dspace_statistics_api.app import api
+from dspace_statistics_api.app import app
 
 
 @pytest.fixture
 def client():
-    return testing.TestClient(api)
+    return testing.TestClient(app)
 
 
 def test_get_collection(client):

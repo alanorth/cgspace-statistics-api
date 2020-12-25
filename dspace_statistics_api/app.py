@@ -28,7 +28,7 @@ class RootResource:
             "</html"
         )
 
-        resp.body = docs_html
+        resp.text = docs_html
 
 
 class StatusResource:
@@ -57,7 +57,7 @@ class OpenAPIJSONResource:
             if DSPACE_STATISTICS_API_URL != "":
                 data["servers"] = [{"url": DSPACE_STATISTICS_API_URL}]
 
-            resp.body = json.dumps(data)
+            resp.text = json.dumps(data)
 
 
 class AllStatisticsResource:
@@ -209,24 +209,24 @@ class SingleStatisticsResource:
                     resp.media = statistics
 
 
-api = application = falcon.API()
-api.add_route("/", RootResource())
-api.add_route("/status", StatusResource())
+app = application = falcon.App()
+app.add_route("/", RootResource())
+app.add_route("/status", StatusResource())
 
 # Item routes
-api.add_route("/items", AllStatisticsResource())
-api.add_route("/item/{id_:uuid}", SingleStatisticsResource())
+app.add_route("/items", AllStatisticsResource())
+app.add_route("/item/{id_:uuid}", SingleStatisticsResource())
 
 # Community routes
-api.add_route("/communities", AllStatisticsResource())
-api.add_route("/community/{id_:uuid}", SingleStatisticsResource())
+app.add_route("/communities", AllStatisticsResource())
+app.add_route("/community/{id_:uuid}", SingleStatisticsResource())
 
 # Collection routes
-api.add_route("/collections", AllStatisticsResource())
-api.add_route("/collection/{id_:uuid}", SingleStatisticsResource())
+app.add_route("/collections", AllStatisticsResource())
+app.add_route("/collection/{id_:uuid}", SingleStatisticsResource())
 
-# Route to the Swagger UI OpenAPI schema
-api.add_route("/docs/openapi.json", OpenAPIJSONResource())
+# Route to the Swagger UI Openapp schema
+app.add_route("/docs/openapi.json", OpenAPIJSONResource())
 
 # Path to host the Swagger UI. Keep in mind that Falcon will add a route for
 # this automatically when we register Swagger and the path will be relative
@@ -241,7 +241,7 @@ SWAGGERUI_PATH = "/swagger"
 SWAGGERUI_API_URL = f"{DSPACE_STATISTICS_API_URL}/docs/openapi.json"
 
 register_swaggerui_app(
-    api,
+    app,
     SWAGGERUI_PATH,
     SWAGGERUI_API_URL,
     config={
